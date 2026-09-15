@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Catch Me!</title>
+    <style>
+        #catchButton {
+            position: absolute;
+            top: 100px;
+            left: 50px;
+            z-index: 3;
+        }
+
+        #myframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        #revealButton {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 5;
+        }
+</style>
+</head>
+<body>
+    <h1>Catch Me!</h1>
+    <p>Score: <span id="score">0</span></p>
+    <button id="catchButton" onclick="catchMe()">Catch Me</button>
+    <button id="revealButton" onclick="revealPortal()">Reveal Hidden Page</button>
+
+    <iframe id="myframe" src="portal.html" width="800" height="500"></iframe>
+</body>
+
+<script>
+    const but = document.getElementById("catchButton");
+    const score = document.getElementById("score");
+    const frame = document.getElementById("myframe");
+    const revealButton = document.getElementById("revealButton");
+    let scoreInt = 0;
+
+    function showRevealButton() {
+        if (scoreInt === 4) {
+            revealButton.style.display = "block";
+        }
+    }
+
+    function revealPortal() {
+        frame.style.opacity = "1";
+        revealButton.style.display = "none";
+    }
+
+    function moveRandom(){
+        let x = Math.random()*500;
+        let y = Math.random()*500;
+
+        but.style.left = x + "px";
+        but.style.top = y + "px";
+    }
+
+    function moveOnLoginButton(){
+
+        const portalDoc = frame.contentWindow.document; 
+        const loginBtn = portalDoc.getElementById("log");
+
+        if(!loginBtn) return ; 
+
+        const frameRect = frame.getBoundingClientRect();
+        const loginRect = loginBtn.getBoundingClientRect();
+
+        but.style.left = (loginRect.left - frameRect.left) + "px";
+        but.style.top = (loginRect.top - frameRect.top) + "px";
+        but.style.zIndex = 1;
+    }
+
+    function catchMe(){
+        if(scoreInt < 4){
+            scoreInt++;
+            score.textContent = scoreInt;
+
+            if(scoreInt === 4){
+                moveOnLoginButton();
+                showRevealButton();
+            }else{
+                moveRandom();
+            }
+        }
+    }
+</script>
+</html>
